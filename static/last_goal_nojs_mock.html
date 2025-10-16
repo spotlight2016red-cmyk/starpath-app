@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ラストゴール（星の光・ノーJS）</title>
+<style>:root{--bg:#0b1020;--panel:#121a33;--line:#23346d;--text:#e9eefc;--muted:#9fb0d1;--accent:#8fd3ff}
+body{margin:0;padding:20px;background:#0b1020;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,"Noto Sans JP",Meiryo,sans-serif}
+.container{max-width:960px;margin:0 auto;padding:0 12px}.card{background:#121a33;border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 16px 0}
+h1{font-size:22px;margin:0 0 8px} h2{font-size:18px;margin:0 0 10px;color:var(--accent)} p.sub{color:var(--muted);margin:0 0 10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.types{display:flex;gap:8px;flex-wrap:wrap}.types input{display:none}.types label{cursor:pointer;border:1px solid #23346d;border-radius:999px;padding:8px 12px;background:#0f1a3a;color:#dfeaff}
+.types input:checked + label{background:#1b3a67}.role{display:none;font-weight:700}
+#t-guide:checked ~ .role.guide, #t-explorer:checked ~ .role.explorer, #t-healer:checked ~ .role.healer, #t-reformer:checked ~ .role.reformer{display:inline}
+.options{display:grid;gap:10px}@media(min-width:760px){.options{grid-template-columns:1fr 1fr 1fr}}
+.option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#101734}
+.btn{display:inline-block;cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:800;background:#1b3a67;color:#e8f6ff;text-decoration:none;text-align:center}.btn.disabled{opacity:.5;pointer-events:none}
+.hint{font-size:12px;color:#9fb0d1}.controls{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.controls input{display:none}.controls label{cursor:pointer;border-radius:12px;padding:10px 14px;background:#153056;border:1px solid #23346d;color:#e8f6ff;font-weight:800}
+.controls input:checked + label{background:#145a32}.sky{position:relative;height:240px;border-radius:16px;background:linear-gradient(180deg,#0b1020,#0b1124);border:1px solid var(--line);overflow:hidden;margin-top:8px}
+.star{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;opacity:.18;transform:scale(.7)}
+#p1:checked ~ .sky #s1, #p2:checked ~ .sky #s2, #p3:checked ~ .sky #s3{opacity:1;box-shadow:0 0 12px #fff;transform:scale(1)}
+.beam{position:absolute;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85),rgba(255,255,255,0));opacity:0}
+#p2:checked ~ .sky #b1{opacity:1} #p3:checked ~ .sky #b2{opacity:1}
+#p3:checked ~ .unlock .lock{display:none} #p3:checked ~ .unlock .open{display:flex}
+.lock{display:flex;align-items:center;justify-content:space-between;gap:12px}.open{display:none;align-items:center;justify-content:space-between;gap:12px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#15204a;border:1px solid #223169;color:#cfe3ff;font-weight:600}
+#openVoices:checked ~ .voices{display:block}.voices{display:none;margin-top:10px}.voice{border:1px solid #273970;border-radius:12px;padding:12px;background:#101734;margin:6px 0}
+</style></head>
+<body><div class="container"><div class="card"><div class="row" style="justify-content:space-between"><div><h1>🎉 次のステージへようこそ！</h1><p class="sub">ここからは、<b>星の光</b>があなたを導きます。</p></div><div>
+<div class="types"><input id="t-guide" type="radio" name="type" checked><label for="t-guide">導き手</label><input id="t-explorer" type="radio" name="type"><label for="t-explorer">探検者</label><input id="t-healer" type="radio" name="type"><label for="t-healer">癒し手</label><input id="t-reformer" type="radio" name="type"><label for="t-reformer">変革者</label></div>
+<div style="margin-top:6px">あなたは <span class="role guide">星の導き手（獅子座）</span><span class="role explorer">星の探検者（射手座）</span><span class="role healer">星の癒し手（魚座）</span><span class="role reformer">星の変革者（水瓶座）</span> です。</div>
+</div></div>
+<h2>これからの選択肢</h2><div class="options">
+<div class="option"><div>① 一区切りにする<br><span class="hint">今日の気づきを持って日常へ</span></div><a class="btn" href="#done">進む</a></div>
+<div class="option"><div>② 旅を続ける<br><span class="hint">日替わりの小さな一歩を受け取る</span></div><a class="btn" href="#daily">受け取る</a></div>
+<div class="option"><div style="width:100%"><div class="lock"><div>③ さらに深める<br><span class="hint">診断を3人に共有して感想をもらうと解放 🔒</span></div><span class="btn disabled">解放待ち</span></div>
+<div class="open"><div>③ さらに深める（解放済み ✨）<br><span class="hint">プログラム / 合宿 / コミュニティへ</span></div><a class="btn" href="#deep">進む</a></div></div></div>
+</div></div>
+<div class="card"><h2>星座の進捗（共有＆感想）</h2><p class="sub">ラベルをタップして進行。3つ集まると下のカードが解放されます。</p>
+<div class="controls"><input id="p1" type="checkbox"><label for="p1">1人目の感想を受け取る</label><input id="p2" type="checkbox"><label for="p2">2人目の感想を受け取る</label><input id="p3" type="checkbox"><label for="p3">3人目の感想を受け取る（解放）</label></div>
+<div class="sky"><div class="star" id="s1" style="left:18%; top:62%"></div><div class="star" id="s2" style="left:50%; top:24%"></div><div class="star" id="s3" style="left:82%; top:66%"></div>
+<div class="beam" id="b1" style="left:20%; top:52%; width:30%"></div><div class="beam" id="b2" style="left:52%; top:52%; width:30%"></div></div>
+<div class="unlock"><div class="card" style="margin-top:12px; background:#101734"><h2>✨ 解放ステータス</h2><p class="sub">3人目まで受け取ると「さらに深める」が使用可能になります。</p><div class="badge">🌟 星の紋章（共通バッジ）</div>
+<div style="margin-top:10px"><input id="openVoices" type="checkbox"><label for="openVoices" class="btn" style="margin-top:8px">「あなたの光を映す声」を受け取る</label>
+<div class="voices"><div class="voice">💬 優しさと人への気配りが光っています。</div><div class="voice">💬 行動力があって、次のステージで必ず役立つと思う。</div><div class="voice">💬 新しいアイデアを生み出す力が輝いている。</div></div>
+</div></div></div></div></div></body></html>
