@@ -1,3 +1,40 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /><title>StarPath App</title></head>
-<body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="弥勒の世を目指す、星座を使った目標設定アプリケーション" />
+  <meta name="theme-color" content="#1a1a2e" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="/icon-192.svg" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" sizes="192x192" href="/icon-192.svg" />
+  <link rel="icon" type="image/svg+xml" sizes="512x512" href="/icon-512.svg" />
+  
+  <title>StarPath - 星座を使った目標設定アプリ</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('Service Worker registered:', registration);
+          })
+          .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
