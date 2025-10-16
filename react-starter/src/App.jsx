@@ -311,39 +311,61 @@ export default function App() {
           display: 'flex',
           alignItems: 'center',
           gap: '0',
-          background: 'var(--panel)',
-          borderTop: '1px solid var(--line)',
-          padding: '0.5rem'
+          background: 'rgba(18, 26, 51, 0.98)',
+          borderTop: '2px solid var(--accent)',
+          padding: '1rem 0.5rem',
+          backdropFilter: 'blur(10px)',
+          boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.3)'
         }}>
           <button
             onClick={handleGoHome}
             style={{
               flex: 1,
-              padding: '0.8rem 0.5rem',
-              background: 'rgba(143, 211, 255, 0.9)',
+              padding: '1.2rem 0.8rem',
+              background: 'rgba(143, 211, 255, 0.95)',
               color: 'var(--bg)',
               border: 'none',
-              borderRadius: '8px',
-              fontSize: '1rem',
+              borderRadius: '12px',
+              fontSize: '1.3rem',
               whiteSpace: 'nowrap',
-              fontWeight: '600'
+              fontWeight: '700',
+              boxShadow: '0 4px 12px rgba(143, 211, 255, 0.3)',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 16px rgba(143, 211, 255, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 12px rgba(143, 211, 255, 0.3)';
             }}
           >
             🏠 ホーム
           </button>
-          <div style={{ position: 'relative', flex: 1, margin: '0 0.25rem' }}>
+          <div style={{ position: 'relative', flex: 1, margin: '0 0.5rem' }}>
             <button
               onClick={() => { setShowMenu(!showMenu); setShowSlotsPanel(false); }}
               style={{
                 width: '100%',
-                padding: '0.8rem 0.5rem',
-                background: 'rgba(143, 211, 255, 0.9)',
+                padding: '1.2rem 0.8rem',
+                background: 'rgba(143, 211, 255, 0.95)',
                 color: 'var(--bg)',
                 border: 'none',
-                borderRadius: '8px',
-                fontSize: '1rem',
+                borderRadius: '12px',
+                fontSize: '1.3rem',
                 whiteSpace: 'nowrap',
-                fontWeight: '600'
+                fontWeight: '700',
+                boxShadow: '0 4px 12px rgba(143, 211, 255, 0.3)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(143, 211, 255, 0.5)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(143, 211, 255, 0.3)';
               }}
             >
               ⚙️ メニュー
@@ -372,14 +394,24 @@ export default function App() {
             onClick={() => setShowTutorial(true)}
             style={{
               flex: 1,
-              padding: '0.8rem 0.5rem',
-              background: 'rgba(143, 211, 255, 0.9)',
+              padding: '1.2rem 0.8rem',
+              background: 'rgba(143, 211, 255, 0.95)',
               color: 'var(--bg)',
               border: 'none',
-              borderRadius: '8px',
-              fontSize: '1rem',
+              borderRadius: '12px',
+              fontSize: '1.3rem',
               whiteSpace: 'nowrap',
-              fontWeight: '600'
+              fontWeight: '700',
+              boxShadow: '0 4px 12px rgba(143, 211, 255, 0.3)',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 16px rgba(143, 211, 255, 0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 12px rgba(143, 211, 255, 0.3)';
             }}
           >
             ℹ️ 使い方
@@ -680,7 +712,7 @@ export default function App() {
 
       {/* ツールバーのぶつかり回避スペーサー */}
       {!isSharedView && (
-        <div style={{ height: '64px' }} />
+        <div style={{ height: '80px' }} />
       )}
 
       {showSlotsPanel && (
