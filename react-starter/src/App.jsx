@@ -9,6 +9,8 @@ import ProgressiveMessage from './components/ProgressiveMessage';
 import ShareFlow from './components/ShareFlow';
 import FlowDesigner from './components/FlowDesigner';
 import SharedFeedbackPage from './components/SharedFeedbackPage';
+import BirthDateInput from './components/BirthDateInput';
+import PreDiagnosisGuide from './components/PreDiagnosisGuide';
 import './utils/feedbackAnalytics'; // フィードバック分析ツールを読み込み
 import './styles.css';
 
@@ -18,7 +20,9 @@ export default function App() {
   const shareId = urlParams.get('share');
   const isSharedView = !!shareId;
   
-  const [showQuestionnaire, setShowQuestionnaire] = useState(!isSharedView);
+  const [showPreDiagnosisGuide, setShowPreDiagnosisGuide] = useState(!isSharedView);
+  const [showBirthDateInput, setShowBirthDateInput] = useState(false);
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [currentType, setCurrentType] = useState(DEFAULT_TYPE);
   const [progress, setProgress] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
@@ -39,6 +43,7 @@ export default function App() {
   const [lastSavedSlot, setLastSavedSlot] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [birthDate, setBirthDate] = useState(null);
 
   // 進行状況の復元（共有リンクビュー以外）
   useEffect(() => {
@@ -87,6 +92,17 @@ export default function App() {
       localStorage.setItem('starpath.app.state', JSON.stringify(snapshot));
     } catch {}
   }, [isSharedView, showQuestionnaire, currentType, progress, unlocked, showShareFlow, showDeepInteraction, deepInteractionResult]);
+
+  const handlePreDiagnosisComplete = () => {
+    setShowPreDiagnosisGuide(false);
+    setShowBirthDateInput(true);
+  };
+
+  const handleBirthDateComplete = (date) => {
+    setBirthDate(date);
+    setShowBirthDateInput(false);
+    setShowQuestionnaire(true);
+  };
 
   const handleQuestionnaireComplete = (typeId) => {
     const detectedType = TYPES[typeId];
@@ -246,52 +262,60 @@ export default function App() {
 
   return (
     <div className="container">
-      {/* トップ左ツールバー：ホーム/保存 */}
+      {/* ボトムツールバー：ホーム/メニュー/使い方 */}
       {!isSharedView && (
         <div style={{
-          position: 'absolute',
-          top: '8px',
-          left: '8px',
+          position: 'fixed',
+          bottom: '0',
+          left: '0',
+          right: '0',
           zIndex: 1000,
           display: 'flex',
           alignItems: 'center',
-          gap: '6px'
+          gap: '0',
+          background: 'var(--panel)',
+          borderTop: '1px solid var(--line)',
+          padding: '0.5rem'
         }}>
           <button
             onClick={handleGoHome}
             style={{
-              padding: '0.6rem 1rem',
-              background: 'rgba(0,0,0,0.55)',
-              color: 'white',
-              border: '1px solid var(--line)',
+              flex: 1,
+              padding: '0.8rem 0.5rem',
+              background: 'rgba(143, 211, 255, 0.9)',
+              color: 'var(--bg)',
+              border: 'none',
               borderRadius: '8px',
-              fontSize: '0.95rem',
-              whiteSpace: 'nowrap'
+              fontSize: '1rem',
+              whiteSpace: 'nowrap',
+              fontWeight: '600'
             }}
           >
-            ホーム
+            🏠 ホーム
           </button>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flex: 1, margin: '0 0.25rem' }}>
             <button
               onClick={() => { setShowMenu(!showMenu); setShowSlotsPanel(false); }}
               style={{
-                padding: '0.6rem 1rem',
-                background: 'rgba(0,0,0,0.55)',
-                color: 'white',
-                border: '1px solid var(--line)',
+                width: '100%',
+                padding: '0.8rem 0.5rem',
+                background: 'rgba(143, 211, 255, 0.9)',
+                color: 'var(--bg)',
+                border: 'none',
                 borderRadius: '8px',
-                fontSize: '0.95rem',
-                whiteSpace: 'nowrap'
+                fontSize: '1rem',
+                whiteSpace: 'nowrap',
+                fontWeight: '600'
               }}
             >
-              メニュー
+              ⚙️ メニュー
             </button>
             {showMenu && (
               <div style={{
                 position: 'absolute',
-                top: '46px',
+                bottom: '60px',
                 left: 0,
-                background: 'rgba(0,0,0,0.75)',
+                background: 'rgba(0,0,0,0.85)',
                 color: 'white',
                 border: '1px solid var(--line)',
                 borderRadius: '8px',
@@ -299,22 +323,24 @@ export default function App() {
                 minWidth: '200px',
                 backdropFilter: 'blur(6px)'
               }}>
-                <button onClick={() => { handleSave(); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '0.95rem' }}>保存</button>
-                <button onClick={() => { setShowSlotsPanel(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '0.95rem' }}>保存スロット</button>
-                <button onClick={() => { setShowResetConfirm(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '0.95rem' }}>リセット</button>
+                <button onClick={() => { handleSave(); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>💾 保存</button>
+                <button onClick={() => { setShowSlotsPanel(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>📦 保存スロット</button>
+                <button onClick={() => { setShowResetConfirm(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>🔄 リセット</button>
               </div>
             )}
           </div>
           <button
             onClick={() => setShowTutorial(true)}
             style={{
-              padding: '0.6rem 1rem',
-              background: 'rgba(0,0,0,0.55)',
-              color: 'white',
-              border: '1px solid var(--line)',
+              flex: 1,
+              padding: '0.8rem 0.5rem',
+              background: 'rgba(143, 211, 255, 0.9)',
+              color: 'var(--bg)',
+              border: 'none',
               borderRadius: '8px',
-              fontSize: '0.95rem',
-              whiteSpace: 'nowrap'
+              fontSize: '1rem',
+              whiteSpace: 'nowrap',
+              fontWeight: '600'
             }}
           >
             ℹ️ 使い方
@@ -742,6 +768,20 @@ export default function App() {
           }}
           onClose={() => setShowFlowDesigner(false)}
         />
+      )}
+
+      {/* 診断前のガイド（深呼吸） */}
+      {showPreDiagnosisGuide && (
+        <div className="card">
+          <PreDiagnosisGuide onComplete={handlePreDiagnosisComplete} />
+        </div>
+      )}
+
+      {/* 生年月日入力画面 */}
+      {showBirthDateInput && (
+        <div className="card">
+          <BirthDateInput onComplete={handleBirthDateComplete} />
+        </div>
       )}
 
       {/* 診断画面 */}
