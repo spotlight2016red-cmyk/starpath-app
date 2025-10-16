@@ -62,15 +62,21 @@ export default function PreDiagnosisGuide({ onComplete }) {
               margin: 0
             }}>
               <li style={{ marginBottom: '1.2rem' }}>
+                <span style={{ display: 'inline-block', width: '1.5rem' }}>・</span>
                 できるだけ1人で<br />
+                <span style={{ display: 'inline-block', width: '1.5rem' }}></span>
                 静かな時間に
               </li>
               <li style={{ marginBottom: '1.2rem' }}>
+                <span style={{ display: 'inline-block', width: '1.5rem' }}>・</span>
                 心を落ち着けて<br />
+                <span style={{ display: 'inline-block', width: '1.5rem' }}></span>
                 リラックスした状態で
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
+                <span style={{ display: 'inline-block', width: '1.5rem' }}>・</span>
                 直感で答えることを<br />
+                <span style={{ display: 'inline-block', width: '1.5rem' }}></span>
                 大切に
               </li>
             </ul>
