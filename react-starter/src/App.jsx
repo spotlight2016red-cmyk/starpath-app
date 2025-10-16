@@ -13,6 +13,9 @@ import BirthDateInput from './components/BirthDateInput';
 import PreDiagnosisGuide from './components/PreDiagnosisGuide';
 import BranchingQuestionnaire from './components/BranchingQuestionnaire';
 import DiagnosisResult from './components/DiagnosisResult';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
+import { saveDiagnosisDataWithConsent } from './firebase/diagnosisService';
 import './utils/feedbackAnalytics'; // フィードバック分析ツールを読み込み
 import './styles.css';
 
@@ -46,15 +49,22 @@ export default function App() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [birthDate, setBirthDate] = useState(null);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [hasDataConsent, setHasDataConsent] = useState(false);
+  const [questionnaireAnswers, setQuestionnaireAnswers] = useState([]);
+  const [showTermsOfService, setShowTermsOfService] = useState(false);
 
   // 進行状況の復元（共有リンクビュー以外）
   useEffect(() => {
     if (isSharedView) return;
     try {
+      // データ収集は自動的に有効化（暗黙の了解）
+      setHasDataConsent(true);
+      
       const saved = JSON.parse(localStorage.getItem('starpath.app.state') || 'null');
       if (saved) {
         setShowQuestionnaire(!!saved.showQuestionnaire === false ? false : saved.showQuestionnaire);
-        if (saved.currentType && saved.currentType.id) setCurrentType(saved.currentType);
+        // currentTypeは復元しない（診断結果を保存しない）
         if (typeof saved.progress === 'number') setProgress(saved.progress);
         if (typeof saved.unlocked === 'boolean') setUnlocked(saved.unlocked);
         if (typeof saved.showShareFlow === 'boolean') setShowShareFlow(saved.showShareFlow);
@@ -95,6 +105,7 @@ export default function App() {
     } catch {}
   }, [isSharedView, showQuestionnaire, currentType, progress, unlocked, showShareFlow, showDeepInteraction, deepInteractionResult]);
 
+
   const handlePreDiagnosisComplete = () => {
     setShowPreDiagnosisGuide(false);
     setShowBirthDateInput(true);
@@ -112,10 +123,29 @@ export default function App() {
     setShowQuestionnaire(false);
   };
 
-  const handleBranchingQuestionnaireComplete = (typeId) => {
+  const handleBranchingQuestionnaireComplete = async (typeId, answers) => {
     const detectedType = TYPES[typeId];
     setCurrentType(detectedType);
     setShowQuestionnaire(false);
+    setQuestionnaireAnswers(answers);
+    
+    // データ収集に同意している場合、Firebaseに保存
+    if (hasDataConsent) {
+      try {
+        await saveDiagnosisDataWithConsent({
+          type: typeId,
+          confidence: 85, // 仮の値、後で実際の信頼度に置き換える
+          answers: answers,
+          birthDate: birthDate,
+          astrology: null, // 後で実装
+          fourPillars: null, // 後で実装
+          bagua: null // 後で実装
+        }, hasDataConsent);
+        console.log('診断データをFirebaseに保存しました');
+      } catch (error) {
+        console.error('診断データの保存に失敗しました:', error);
+      }
+    }
   };
 
   const handleProgress = (step) => {
@@ -334,6 +364,7 @@ export default function App() {
                 <button onClick={() => { handleSave(); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>💾 保存</button>
                 <button onClick={() => { setShowSlotsPanel(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>📦 保存スロット</button>
                 <button onClick={() => { setShowResetConfirm(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>🔄 リセット</button>
+                <button onClick={() => { setShowTermsOfService(true); setShowMenu(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', color: 'white', border: 'none', fontSize: '1rem' }}>📋 利用規約</button>
               </div>
             )}
           </div>
@@ -778,22 +809,32 @@ export default function App() {
         />
       )}
 
-      {/* 診断前のガイド（深呼吸） */}
-      {showPreDiagnosisGuide && (
-        <div className="card">
-          <PreDiagnosisGuide onComplete={handlePreDiagnosisComplete} />
-        </div>
+      {/* 利用規約 */}
+      {showTermsOfService && (
+        <TermsOfService 
+          onClose={() => setShowTermsOfService(false)}
+        />
       )}
 
-      {/* 生年月日入力画面 */}
-      {showBirthDateInput && (
-        <div className="card">
-          <BirthDateInput onComplete={handleBirthDateComplete} />
-        </div>
-      )}
+      {/* 利用規約表示中は他のコンテンツを非表示 */}
+      {!showTermsOfService && (
+        <>
+          {/* 診断前のガイド（深呼吸） */}
+          {showPreDiagnosisGuide && (
+            <div className="card">
+              <PreDiagnosisGuide onComplete={handlePreDiagnosisComplete} />
+            </div>
+          )}
 
-      {/* 診断画面（分岐型質問システム） */}
-      {showQuestionnaire ? (
+          {/* 生年月日入力画面 */}
+          {showBirthDateInput && (
+            <div className="card">
+              <BirthDateInput onComplete={handleBirthDateComplete} />
+            </div>
+          )}
+
+          {/* 診断画面（分岐型質問システム） */}
+          {showQuestionnaire && !showPreDiagnosisGuide && !showBirthDateInput ? (
         <div className="card">
           <h1>🌟 あなたの星を見つけよう</h1>
           <p className="sub" style={{ marginBottom: '2rem' }}>
@@ -822,7 +863,7 @@ export default function App() {
             </button>
           </div>
         </div>
-      ) : (
+      ) : currentType ? (
         <>
           <div className="card">
             <TypeSelector 
@@ -947,6 +988,8 @@ export default function App() {
         </div>
       )}
 
+        </>
+        ) : null}
         </>
       )}
     </div>

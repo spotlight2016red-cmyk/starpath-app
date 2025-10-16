@@ -95,7 +95,7 @@ export const TYPES = {
 // タイプIDから配列へ変換
 export const TYPE_LIST = Object.values(TYPES);
 
-// デフォルトタイプ
-export const DEFAULT_TYPE = TYPES.guide;
+// デフォルトタイプ（診断前はnull）
+export const DEFAULT_TYPE = null;
 
 
