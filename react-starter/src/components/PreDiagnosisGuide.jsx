@@ -41,7 +41,10 @@ export default function PreDiagnosisGuide({ onComplete }) {
             background: 'rgba(143, 211, 255, 0.05)',
             borderRadius: '12px',
             border: '1px solid var(--line)',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto'
           }}>
             <h2 style={{ 
               fontSize: '1.3rem', 
@@ -58,14 +61,17 @@ export default function PreDiagnosisGuide({ onComplete }) {
               padding: 0,
               margin: 0
             }}>
-              <li style={{ marginBottom: '0.8rem' }}>
-                ✓ できるだけ1人で静かな時に
+              <li style={{ marginBottom: '1.2rem' }}>
+                できるだけ1人で<br />
+                静かな時間に
+              </li>
+              <li style={{ marginBottom: '1.2rem' }}>
+                心を落ち着けて<br />
+                リラックスした状態で
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
-                ✓ 心を落ち着けて、リラックスした状態で
-              </li>
-              <li style={{ marginBottom: '0.8rem' }}>
-                ✓ 直感で答えることを大切に
+                直感で答えることを<br />
+                大切に
               </li>
             </ul>
           </div>

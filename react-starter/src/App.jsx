@@ -11,6 +11,8 @@ import FlowDesigner from './components/FlowDesigner';
 import SharedFeedbackPage from './components/SharedFeedbackPage';
 import BirthDateInput from './components/BirthDateInput';
 import PreDiagnosisGuide from './components/PreDiagnosisGuide';
+import BranchingQuestionnaire from './components/BranchingQuestionnaire';
+import DiagnosisResult from './components/DiagnosisResult';
 import './utils/feedbackAnalytics'; // フィードバック分析ツールを読み込み
 import './styles.css';
 
@@ -105,6 +107,12 @@ export default function App() {
   };
 
   const handleQuestionnaireComplete = (typeId) => {
+    const detectedType = TYPES[typeId];
+    setCurrentType(detectedType);
+    setShowQuestionnaire(false);
+  };
+
+  const handleBranchingQuestionnaireComplete = (typeId) => {
     const detectedType = TYPES[typeId];
     setCurrentType(detectedType);
     setShowQuestionnaire(false);
@@ -784,14 +792,23 @@ export default function App() {
         </div>
       )}
 
-      {/* 診断画面 */}
+      {/* 診断画面（分岐型質問システム） */}
       {showQuestionnaire ? (
         <div className="card">
           <h1>🌟 あなたの星を見つけよう</h1>
           <p className="sub" style={{ marginBottom: '2rem' }}>
             12の質問に答えて、あなたのタイプを診断します。
           </p>
-          <Questionnaire onComplete={handleQuestionnaireComplete} />
+          <BranchingQuestionnaire onComplete={handleBranchingQuestionnaireComplete} />
+          
+          {/* 結果表示 */}
+          {currentType && currentType.id && (
+            <DiagnosisResult 
+              typeId={currentType.id}
+              birthDate={birthDate}
+              questionnaireAnswers={{}}
+            />
+          )}
           
           {/* デバッグ用：診断スキップボタン */}
           <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--line)', paddingTop: '1rem' }}>
