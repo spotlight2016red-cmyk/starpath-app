@@ -1,7 +1,7 @@
 {
-  "name": "starpath-react-starter",
+  "name": "meguri-react-starter",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "firebase": "^12.4.0",
+    "framer-motion": "^12.23.24",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

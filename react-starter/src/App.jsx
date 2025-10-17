@@ -15,6 +15,7 @@ import BranchingQuestionnaire from './components/BranchingQuestionnaire';
 import DiagnosisResult from './components/DiagnosisResult';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
+import AvatarEvolution from './components/AvatarEvolution';
 import { saveDiagnosisDataWithConsent } from './firebase/diagnosisService';
 import './utils/feedbackAnalytics'; // フィードバック分析ツールを読み込み
 import './styles.css';
@@ -53,6 +54,7 @@ export default function App() {
   const [hasDataConsent, setHasDataConsent] = useState(false);
   const [questionnaireAnswers, setQuestionnaireAnswers] = useState([]);
   const [showTermsOfService, setShowTermsOfService] = useState(false);
+  const [showAvatar, setShowAvatar] = useState(false);
 
   // 進行状況の復元（共有リンクビュー以外）
   useEffect(() => {
@@ -897,19 +899,42 @@ export default function App() {
         </div>
       ) : currentType ? (
         <>
-          <div className="card">
-            <TypeSelector 
-              currentType={currentType} 
-              onTypeChange={setCurrentType} 
+          {/* アバター画面（Ver.1.5追加） */}
+          {showAvatar ? (
+            <AvatarEvolution 
+              initialType={currentType.id}
+              onExpChange={(exp) => console.log('EXP:', exp)}
             />
-          </div>
+          ) : (
+            <>
+              <div className="card">
+                <TypeSelector 
+                  currentType={currentType} 
+                  onTypeChange={setCurrentType} 
+                />
+                
+                {/* アバター表示ボタン（Ver.1.5） */}
+                <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'linear-gradient(135deg, rgba(143, 211, 255, 0.1), rgba(255, 215, 143, 0.1))', borderRadius: '12px', border: '2px solid rgba(143, 211, 255, 0.3)' }}>
+                  <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>🌟 MEGURI Ver.1.5 - アバター進化</h3>
+                  <p className="sub" style={{ marginBottom: '1rem' }}>祈りと行動で、アバターを育てよう</p>
+                  <button 
+                    className="btn" 
+                    onClick={() => setShowAvatar(true)}
+                    style={{ width: '100%', fontSize: '1rem', padding: '0.75rem' }}
+                  >
+                    ✨ アバターを見る
+                  </button>
+                </div>
+              </div>
 
-      <div className="card">
-        <ProgressiveMessage 
-          type={currentType}
-          progress={progress}
-        />
-      </div>
+              <div className="card">
+                <ProgressiveMessage 
+                  type={currentType}
+                  progress={progress}
+                />
+              </div>
+            </>
+          )}
 
       <div className="card">
         <GoalOptions 
