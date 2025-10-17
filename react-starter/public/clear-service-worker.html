@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Worker クリア</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff5252;
+        }
+        .success {
+            background: #4caf50;
+        }
+        .success:hover {
+            background: #45a049;
+        }
+        .info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Service Worker クリアツール</h1>
+        <p>MEGURIアプリのService Workerを完全にクリアします</p>
+        
+        <div class="info">
+            <h3>📋 手順：</h3>
+            <ol>
+                <li>下の「Service Workerをクリア」ボタンをクリック</li>
+                <li>「成功！」と表示されたら完了</li>
+                <li>ブラウザのタブを閉じて、新しいタブで <code>http://localhost:3000</code> を開く</li>
+            </ol>
+        </div>
+        
+        <button onclick="clearServiceWorkers()">Service Workerをクリア</button>
+        <button onclick="clearAllCache()" class="success">全てのキャッシュをクリア</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function clearServiceWorkers() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>🔄 Service Workerをクリア中...</p>';
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        console.log('Service Worker unregistered:', registration.scope);
+                    }
+                    
+                    result.innerHTML = '<p style="color: #4caf50;">✅ Service Workerをクリアしました！</p>';
+                } else {
+                    result.innerHTML = '<p style="color: #ff9800;">⚠️ Service Workerはサポートされていません</p>';
+                }
+            } catch (error) {
+                result.innerHTML = '<p style="color: #f44336;">❌ エラー: ' + error.message + '</p>';
+            }
+        }
+        
+        async function clearAllCache() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>🔄 全てのキャッシュをクリア中...</p>';
+            
+            try {
+                // Service Workerをクリア
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                }
+                
+                // Cache APIをクリア
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                        cacheNames.map(cacheName => caches.delete(cacheName))
+                    );
+                }
+                
+                // LocalStorageとSessionStorageをクリア
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                result.innerHTML = '<p style="color: #4caf50;">✅ 全てのキャッシュをクリアしました！</p><p>新しいタブで <code>http://localhost:3000</code> を開いてください</p>';
+            } catch (error) {
+                result.innerHTML = '<p style="color: #f44336;">❌ エラー: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
