@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import './styles/tokens.css' // Figma Tokens
 // import './index.css' // Temporarily disabled
 
 ReactDOM.createRoot(document.getElementById('root')).render(

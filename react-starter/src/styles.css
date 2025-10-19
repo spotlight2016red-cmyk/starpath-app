@@ -1,3 +1,5 @@
+@import "./styles/tokens.css";
+
 :root {
   --bg: #0b1020;
   --panel: #121a33;
@@ -281,13 +283,26 @@ select {
   }
 }
 
-/* アニメーション */
+/* Hero Sparkles - Override global star styles */
+.hero-sparkle {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Figma Tokens Animation Overrides */
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(143, 211, 255, 0.4);
+    opacity: 0.8;
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 20px 5px rgba(143, 211, 255, 0.2);
+    opacity: 1;
+    transform: scale(1.1);
   }
 }
 
@@ -296,9 +311,11 @@ select {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
   }
 }
+
+/* アニメーション */
 
 @keyframes fadeInUp {
   0% {
