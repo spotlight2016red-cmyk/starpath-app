@@ -1,20 +1,36 @@
 {
-  "name": "starpath-react-starter",
+  "name": "meguri-react-starter",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.5.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "npm run watch:tokens & vite",
+    "build": "npm run build:tokens && vite build",
+    "build:hero": "node scripts/emit-hero.mjs",
+    "build:tokens": "npm run build:hero && style-dictionary build --config style-dictionary.config.json",
+    "preview": "vite preview",
+    "watch:tokens": "npm run build:hero && style-dictionary build --config style-dictionary.config.json --watch"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "autoprefixer": "^10.4.21",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "figma-tokens": "^0.0.8",
     "firebase": "^12.4.0",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.546.0",
+    "postcss": "^8.5.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "style-dictionary": "^5.1.1",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
     "@vitejs/plugin-react": "^4.0.0",
+    "tailwindcss": "^4.1.14",
+    "vercel": "^48.4.0",
     "vite": "^5.0.0",
     "vite-plugin-pwa": "^1.1.0"
   }
